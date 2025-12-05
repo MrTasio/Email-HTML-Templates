@@ -802,6 +802,23 @@
                     return `background='${baseUrl}/${path}'`;
                 });
                 
+                // Constrain section content to max-width by wrapping tables
+                // Replace any table width attributes that exceed 600px
+                content = content.replace(/width="(\d+)"/g, (match, width) => {
+                    const numWidth = parseInt(width);
+                    if (numWidth > 600) {
+                        return 'width="600"';
+                    }
+                    return match;
+                });
+                content = content.replace(/width:(\d+)px/g, (match, width) => {
+                    const numWidth = parseInt(width);
+                    if (numWidth > 600) {
+                        return 'width:600px';
+                    }
+                    return match;
+                });
+                
                 // Create wrapper HTML with the section content
                 const wrapperHtml = `<!DOCTYPE html>
 <html>
@@ -819,15 +836,29 @@
             padding: 0; 
             background: #f5f5f5; 
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
         }
         .email-container { 
             max-width: 600px; 
+            width: 100%;
             margin: 0 auto; 
-            background: #fff; 
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .email-container table {
+            max-width: 600px !important;
+            width: 100% !important;
         }
         table { 
-            width: 100%; 
+            width: 100% !important;
+            max-width: 600px !important;
             border-collapse: collapse;
+        }
+        table[width] {
+            max-width: 600px !important;
         }
         img {
             max-width: 100%;
@@ -843,15 +874,20 @@
             border-collapse: collapse;
             mso-table-lspace: 0pt;
             mso-table-rspace: 0pt;
+            max-width: 600px !important;
         }
         td {
             padding: 0;
+        }
+        .esdev-mso-table {
+            max-width: 600px !important;
+            width: 100% !important;
         }
     </style>
 </head>
 <body>
     <div class="email-container">
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff;">
             ${content}
         </table>
     </div>
