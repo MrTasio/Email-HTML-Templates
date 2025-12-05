@@ -239,6 +239,17 @@
             height: 100%;
             color: #666;
             font-size: 14px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            background: rgba(245, 245, 245, 0.9);
+        }
+        
+        .loading.hidden {
+            display: none;
         }
         
         .back-link {
@@ -383,16 +394,23 @@
             }
         }
         
-        function createPreviewIframe(content, sectionName) {
+        function createPreviewIframe(content, previewWrapper) {
+            const loadingDiv = previewWrapper.querySelector('.loading');
+            
             if (!content) {
-                return '<div class="loading" style="color: #999; font-size: 12px;">Preview requires a local server<br><small>Run: python3 -m http.server 8000</small></div>';
+                if (loadingDiv) {
+                    loadingDiv.textContent = 'Preview unavailable';
+                    loadingDiv.style.color = '#999';
+                }
+                return;
             }
             
-            // Create a data URI with the section content wrapped in HTML
+            // Create wrapper HTML with the section content
             const wrapperHtml = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body { margin: 0; padding: 0; background: #f5f5f5; }
         .email-container { max-width: 600px; margin: 0 auto; background: #fff; }
@@ -408,10 +426,41 @@
 </body>
 </html>`;
             
+            // Create blob URL
             const blob = new Blob([wrapperHtml], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
+            const blobUrl = URL.createObjectURL(blob);
             
-            return `<iframe src="${url}" style="width: 100%; height: 100%; border: none; transform: scale(0.4); transform-origin: top left; width: 250%; height: 250%; pointer-events: none; opacity: 0; transition: opacity 0.3s;" onload="this.style.opacity = '1'"></iframe>`;
+            // Create iframe element
+            const iframe = document.createElement('iframe');
+            iframe.src = blobUrl;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.style.transform = 'scale(0.4)';
+            iframe.style.transformOrigin = 'top left';
+            iframe.style.width = '250%';
+            iframe.style.height = '250%';
+            iframe.style.pointerEvents = 'none';
+            iframe.style.opacity = '0';
+            iframe.style.transition = 'opacity 0.3s';
+            
+            iframe.onload = function() {
+                iframe.style.opacity = '1';
+                if (loadingDiv) {
+                    loadingDiv.classList.add('hidden');
+                }
+                // Clean up blob URL after a delay
+                setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+            };
+            
+            iframe.onerror = function() {
+                if (loadingDiv) {
+                    loadingDiv.textContent = 'Preview unavailable';
+                    loadingDiv.style.color = '#999';
+                }
+            };
+            
+            previewWrapper.appendChild(iframe);
         }
         
         async function createSectionCard(section, category) {
@@ -420,14 +469,11 @@
             
             const fullPath = `sections/${section.path}`;
             
-            // Try to load content for preview
-            const content = await loadSectionContent(section.path);
-            const previewHtml = createPreviewIframe(content, section.name);
-            
+            // Create card structure
             card.innerHTML = `
                 <div class="section-preview">
                     <div class="section-preview-wrapper">
-                        ${previewHtml}
+                        <div class="loading">Loading preview...</div>
                     </div>
                 </div>
                 <div class="section-info">
@@ -440,6 +486,11 @@
                     </div>
                 </div>
             `;
+            
+            // Load content and create preview
+            const previewWrapper = card.querySelector('.section-preview-wrapper');
+            const content = await loadSectionContent(section.path);
+            createPreviewIframe(content, previewWrapper);
             
             return card;
         }
