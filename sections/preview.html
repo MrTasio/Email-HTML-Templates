@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+            <!-- Content will be loaded here -->
+        </table>
+    </div>
+    <script>
+        // Get section path from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const section = urlParams.get('section');
+        
+        if (section) {
+            // Try to load the section file
+            // Path is relative to sections/ folder
+            const sectionPath = section;
+            
+            fetch(sectionPath)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(content => {
+                    const table = document.querySelector('table');
+                    if (table) {
+                        table.innerHTML = content;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading section:', error);
+                    const table = document.querySelector('table');
+                    if (table) {
+                        table.innerHTML = `
+                            <tr>
+                                <td style="padding: 20px; color: #666; text-align: center;">
+                                    <div style="margin-bottom: 10px;">⚠️ Error loading section</div>
+                                    <div style="font-size: 12px; color: #999;">${error.message}</div>
+                                    <div style="font-size: 11px; color: #999; margin-top: 10px;">
+                                        Path: ${section}<br>
+                                        Note: Preview requires a local server. Use: python3 -m http.server 8000
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+        } else {
+            document.querySelector('table').innerHTML = '<tr><td style="padding: 20px; color: #666; text-align: center;">No section specified</td></tr>';
+        }
+    </script>
+</body>
+</html>
+

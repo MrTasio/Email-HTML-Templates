@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Email Sections Overview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #262038 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        h1 {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #00BCD4 0%, #00ACC1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #b0b0b0;
+            font-weight: 300;
+        }
+        
+        .category-section {
+            margin-bottom: 60px;
+        }
+        
+        .category-title {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #00BCD4;
+            text-transform: capitalize;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .section-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 188, 212, 0.2);
+            border-color: rgba(0, 188, 212, 0.5);
+        }
+        
+        .section-preview {
+            width: 100%;
+            height: 300px;
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.4);
+            transform-origin: top left;
+            width: 250%;
+            height: 250%;
+            pointer-events: none;
+            background: #ffffff;
+        }
+        
+        .section-preview-wrapper {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .section-preview-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #f5f5f5 25%, transparent 25%, transparent 75%, #f5f5f5 75%, #f5f5f5),
+                        linear-gradient(45deg, #f5f5f5 25%, transparent 25%, transparent 75%, #f5f5f5 75%, #f5f5f5);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .section-preview-wrapper iframe {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-info {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .section-name {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .section-path {
+            font-size: 12px;
+            color: #888888;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        
+        .section-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00BCD4 0%, #00ACC1 100%);
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 188, 212, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            color: #00BCD4;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #b0b0b0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #00BCD4;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #00ACC1;
+            transform: translateX(-5px);
+        }
+        
+        @media (max-width: 768px) {
+            .sections-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 36px;
+            }
+            
+            .category-title {
+                font-size: 24px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="back-link">← Back to Templates</a>
+        
+        <header>
+            <h1>Email Sections Library</h1>
+            <p class="subtitle">Modular, reusable sections for email templates</p>
+        </header>
+        
+        <div id="sections-container">
+            <!-- Sections will be dynamically loaded here -->
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number" id="total-sections">0</span>
+                <span class="stat-label">Sections</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="total-categories">0</span>
+                <span class="stat-label">Categories</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Section data organized by category
+        const sectionsData = {
+            headers: [
+                {
+                    name: 'Preheader AVORA',
+                    path: 'headers/preheader-avora-1.html',
+                    description: 'Top banner with promotional message'
+                },
+                {
+                    name: 'Preheader Stock',
+                    path: 'headers/preheader-stock-1.html',
+                    description: 'Logo and navigation preheader'
+                },
+                {
+                    name: 'Header AVORA',
+                    path: 'headers/header-avora-1.html',
+                    description: 'Header with logo and navigation menu'
+                }
+            ],
+            heroes: [
+                {
+                    name: 'Hero Fall Sale',
+                    path: 'heroes/hero-avora-fall-sale.html',
+                    description: 'Hero section with background image and sale promotion'
+                }
+            ],
+            products: [
+                {
+                    name: 'Product Grid 3 Column',
+                    path: 'products/product-grid-3-column.html',
+                    description: 'Three-column product grid with images and prices'
+                }
+            ],
+            cta: [
+                {
+                    name: 'CTA Button Black',
+                    path: 'cta/cta-button-black.html',
+                    description: 'Black call-to-action button section'
+                }
+            ],
+            testimonials: [
+                {
+                    name: 'Testimonial Stock',
+                    path: 'testimonials/testimonial-stock-1.html',
+                    description: 'Customer testimonial with quote icon'
+                }
+            ],
+            blog: [
+                {
+                    name: 'Blog 2 Column',
+                    path: 'blog/blog-stock-2-column.html',
+                    description: 'Two-column blog post showcase'
+                }
+            ],
+            footer: [
+                {
+                    name: 'Footer AVORA Complete',
+                    path: 'footer/footer-avora-complete.html',
+                    description: 'Complete footer with social links, contact info, and unsubscribe'
+                }
+            ],
+            misc: [
+                {
+                    name: 'Features 4 Column',
+                    path: 'misc/features-4-column.html',
+                    description: 'Four-column features section with icons'
+                }
+            ]
+        };
+        
+        async function loadSectionContent(path) {
+            try {
+                // Try to fetch the section content
+                const response = await fetch(`sections/${path}`);
+                if (!response.ok) throw new Error('Fetch failed');
+                return await response.text();
+            } catch (error) {
+                // If fetch fails (file:// protocol), return null
+                return null;
+            }
+        }
+        
+        function createPreviewIframe(content, sectionName) {
+            if (!content) {
+                return '<div class="loading" style="color: #999; font-size: 12px;">Preview requires a local server<br><small>Run: python3 -m http.server 8000</small></div>';
+            }
+            
+            // Create a data URI with the section content wrapped in HTML
+            const wrapperHtml = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; padding: 0; background: #f5f5f5; }
+        .email-container { max-width: 600px; margin: 0 auto; background: #fff; }
+        table { width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #ffffff;">
+            ${content}
+        </table>
+    </div>
+</body>
+</html>`;
+            
+            const blob = new Blob([wrapperHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            return `<iframe src="${url}" style="width: 100%; height: 100%; border: none; transform: scale(0.4); transform-origin: top left; width: 250%; height: 250%; pointer-events: none; opacity: 0; transition: opacity 0.3s;" onload="this.style.opacity = '1'"></iframe>`;
+        }
+        
+        async function createSectionCard(section, category) {
+            const card = document.createElement('div');
+            card.className = 'section-card';
+            
+            const fullPath = `sections/${section.path}`;
+            
+            // Try to load content for preview
+            const content = await loadSectionContent(section.path);
+            const previewHtml = createPreviewIframe(content, section.name);
+            
+            card.innerHTML = `
+                <div class="section-preview">
+                    <div class="section-preview-wrapper">
+                        ${previewHtml}
+                    </div>
+                </div>
+                <div class="section-info">
+                    <h3 class="section-name">${section.name}</h3>
+                    <div class="section-path">${section.path}</div>
+                    <p style="color: #b0b0b0; font-size: 14px; margin-bottom: 15px;">${section.description}</p>
+                    <div class="section-actions">
+                        <a href="${fullPath}" class="btn btn-primary" target="_blank">View Section</a>
+                        <a href="${fullPath}" class="btn btn-secondary" download>Download</a>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        async function renderSections() {
+            const container = document.getElementById('sections-container');
+            let totalSections = 0;
+            
+            // Render each category
+            for (const category of Object.keys(sectionsData)) {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section';
+                
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.className = 'category-title';
+                categoryTitle.textContent = category;
+                categorySection.appendChild(categoryTitle);
+                
+                const grid = document.createElement('div');
+                grid.className = 'sections-grid';
+                
+                // Create cards for each section in this category
+                for (const section of sectionsData[category]) {
+                    const card = await createSectionCard(section, category);
+                    grid.appendChild(card);
+                    totalSections++;
+                }
+                
+                categorySection.appendChild(grid);
+                container.appendChild(categorySection);
+            }
+            
+            // Update stats
+            document.getElementById('total-sections').textContent = totalSections;
+            document.getElementById('total-categories').textContent = Object.keys(sectionsData).length;
+        }
+        
+        // Render sections on page load
+        renderSections();
+    </script>
+</body>
+</html>
+
