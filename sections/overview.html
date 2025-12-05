@@ -595,12 +595,14 @@
         
         async function loadSectionContent(path) {
             try {
-                // Try to fetch the section content
-                const response = await fetch(`${path}`);
-                if (!response.ok) throw new Error('Fetch failed');
+                // Fetch the section content
+                const response = await fetch(path);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 return await response.text();
             } catch (error) {
-                // If fetch fails (file:// protocol), return null
+                console.error('Error loading section:', error);
                 return null;
             }
         }
@@ -617,36 +619,37 @@
                 return;
             }
             
-            // Convert relative asset paths to absolute paths for blob URL iframe
-            // Use root-relative paths since assets are always at the root level
-            const baseUrl = window.location.origin + '/';
-            
-            // Replace relative asset paths in src attributes
-            content = content.replace(/src="(assets\/[^"]+)"/g, (match, path) => {
-                return `src="${baseUrl}${path}"`;
-            });
-            content = content.replace(/src='(assets\/[^']+)'/g, (match, path) => {
-                return `src='${baseUrl}${path}'`;
-            });
-            
-            // Replace relative asset paths in background-image URLs
-            content = content.replace(/background-image:\s*url\((['"]?)(assets\/[^'")]+)\1\)/g, (match, quote, path) => {
-                return `background-image: url(${quote}${baseUrl}${path}${quote})`;
-            });
-            content = content.replace(/background-image:\s*url\((assets\/[^)]+)\)/g, (match, path) => {
-                return `background-image: url(${baseUrl}${path})`;
-            });
-            
-            // Replace relative asset paths in background attributes
-            content = content.replace(/background="(assets\/[^"]+)"/g, (match, path) => {
-                return `background="${baseUrl}${path}"`;
-            });
-            content = content.replace(/background='(assets\/[^']+)'/g, (match, path) => {
-                return `background='${baseUrl}${path}'`;
-            });
-            
-            // Create wrapper HTML with the section content
-            const wrapperHtml = `<!DOCTYPE html>
+            try {
+                // Convert relative asset paths to absolute paths for blob URL iframe
+                // Use root-relative paths since assets are always at the root level
+                const baseUrl = window.location.origin + '/';
+                
+                // Replace relative asset paths in src attributes
+                content = content.replace(/src="(assets\/[^"]+)"/g, (match, path) => {
+                    return `src="${baseUrl}${path}"`;
+                });
+                content = content.replace(/src='(assets\/[^']+)'/g, (match, path) => {
+                    return `src='${baseUrl}${path}'`;
+                });
+                
+                // Replace relative asset paths in background-image URLs
+                content = content.replace(/background-image:\s*url\((['"]?)(assets\/[^'")]+)\1\)/g, (match, quote, path) => {
+                    return `background-image: url(${quote}${baseUrl}${path}${quote})`;
+                });
+                content = content.replace(/background-image:\s*url\((assets\/[^)]+)\)/g, (match, path) => {
+                    return `background-image: url(${baseUrl}${path})`;
+                });
+                
+                // Replace relative asset paths in background attributes
+                content = content.replace(/background="(assets\/[^"]+)"/g, (match, path) => {
+                    return `background="${baseUrl}${path}"`;
+                });
+                content = content.replace(/background='(assets\/[^']+)'/g, (match, path) => {
+                    return `background='${baseUrl}${path}'`;
+                });
+                
+                // Create wrapper HTML with the section content
+                const wrapperHtml = `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -700,34 +703,38 @@
     </div>
 </body>
 </html>`;
-            
-            // Create blob URL
-            const blob = new Blob([wrapperHtml], { type: 'text/html' });
-            const blobUrl = URL.createObjectURL(blob);
-            
-            // Create iframe element
-            const iframe = document.createElement('iframe');
-            iframe.src = blobUrl;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
-            iframe.style.display = 'block';
-            
-            iframe.onload = function() {
-                loadingDiv.classList.add('hidden');
-                contentDiv.classList.add('loaded');
-                // Clean up blob URL after a delay
-                setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
-            };
-            
-            iframe.onerror = function() {
-                if (loadingDiv) {
+                
+                // Create a blob URL with the wrapper HTML content
+                const blob = new Blob([wrapperHtml], { type: 'text/html' });
+                const blobUrl = URL.createObjectURL(blob);
+                
+                // Create iframe with the blob URL
+                const iframe = document.createElement('iframe');
+                iframe.src = blobUrl;
+                iframe.style.width = '100%';
+                iframe.style.height = '100%';
+                iframe.style.border = 'none';
+                iframe.style.display = 'block';
+                
+                iframe.onload = function() {
+                    loadingDiv.classList.add('hidden');
+                    contentDiv.classList.add('loaded');
+                    // Clean up blob URL after a delay
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+                };
+                
+                iframe.onerror = function() {
                     loadingDiv.textContent = 'Preview unavailable';
                     loadingDiv.style.color = '#999';
-                }
-            };
-            
-            contentDiv.appendChild(iframe);
+                };
+                
+                contentDiv.appendChild(iframe);
+                
+            } catch (error) {
+                console.error('Error loading preview:', error);
+                loadingDiv.textContent = 'Preview unavailable';
+                loadingDiv.style.color = '#999';
+            }
         }
         
         async function createSectionCard(section, category) {
