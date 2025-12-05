@@ -480,9 +480,37 @@
                     throw new Error(`HTTP ${response.status}`);
                 }
                 
-                const htmlContent = await response.text();
+                let htmlContent = await response.text();
                 
-                // Create a blob URL with the HTML content
+                // Convert relative asset paths to absolute paths for blob URL iframe
+                // Use root-relative paths since assets are always at the root level
+                const baseUrl = window.location.origin + '/';
+                
+                // Replace relative asset paths in src attributes
+                htmlContent = htmlContent.replace(/src="(assets\/[^"]+)"/g, (match, path) => {
+                    return `src="${baseUrl}${path}"`;
+                });
+                htmlContent = htmlContent.replace(/src='(assets\/[^']+)'/g, (match, path) => {
+                    return `src='${baseUrl}${path}'`;
+                });
+                
+                // Replace relative asset paths in background-image URLs
+                htmlContent = htmlContent.replace(/background-image:\s*url\((['"]?)(assets\/[^'")]+)\1\)/g, (match, quote, path) => {
+                    return `background-image: url(${quote}${baseUrl}${path}${quote})`;
+                });
+                htmlContent = htmlContent.replace(/background-image:\s*url\((assets\/[^)]+)\)/g, (match, path) => {
+                    return `background-image: url(${baseUrl}${path})`;
+                });
+                
+                // Replace relative asset paths in background attributes
+                htmlContent = htmlContent.replace(/background="(assets\/[^"]+)"/g, (match, path) => {
+                    return `background="${baseUrl}${path}"`;
+                });
+                htmlContent = htmlContent.replace(/background='(assets\/[^']+)'/g, (match, path) => {
+                    return `background='${baseUrl}${path}'`;
+                });
+                
+                // Create a blob URL with the modified HTML content
                 const blob = new Blob([htmlContent], { type: 'text/html' });
                 const blobUrl = URL.createObjectURL(blob);
                 
