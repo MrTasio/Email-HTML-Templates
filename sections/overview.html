@@ -309,6 +309,45 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
+        .btn-copy {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            border: 1px solid rgba(76, 175, 80, 0.4);
+        }
+        
+        .btn-copy:hover {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: rgba(76, 175, 80, 0.6);
+        }
+        
+        .btn-copy.copied {
+            background: rgba(76, 175, 80, 0.4);
+            color: #ffffff;
+            border-color: #4CAF50;
+        }
+        
+        .copy-toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(76, 175, 80, 0.95);
+            color: #ffffff;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         .stats {
             display: flex;
             justify-content: center;
@@ -922,7 +961,7 @@
                     <p style="color: #b0b0b0; font-size: 14px; margin-bottom: 15px;">${section.description}</p>
                     <div class="section-actions">
                         <a href="${fullPath}" class="btn btn-primary" target="_blank">View Section</a>
-                        <a href="${fullPath}" class="btn btn-secondary" download>Download</a>
+                        <button class="btn btn-secondary btn-copy" data-section-path="${section.path}">Copy Code</button>
                     </div>
                 </div>
             `;
@@ -1049,6 +1088,171 @@
                     cardIndex++;
                 }
             }
+            
+            // Setup copy buttons after all cards are rendered
+            setupCopyButtons();
+        }
+        
+        // Function to extract section content from HTML (table content only, ready for email builders)
+        async function extractSectionContent(sectionPath) {
+            try {
+                const response = await fetch(sectionPath);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                const html = await response.text();
+                
+                // Create a temporary DOM parser
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Find the main table with role="presentation"
+                const mainTable = doc.querySelector('table[role="presentation"]');
+                if (!mainTable) {
+                    throw new Error('Section table not found');
+                }
+                
+                // Clone the table to avoid modifying the original
+                const clonedTable = mainTable.cloneNode(true);
+                
+                // Remove flexbox wrapper divs (they're only for standalone viewing, not needed in email builders)
+                const wrapperDivs = clonedTable.querySelectorAll('div[class*="wrapper"]');
+                wrapperDivs.forEach(wrapper => {
+                    // Move wrapper's children to wrapper's parent
+                    const parent = wrapper.parentNode;
+                    while (wrapper.firstChild) {
+                        parent.insertBefore(wrapper.firstChild, wrapper);
+                    }
+                    parent.removeChild(wrapper);
+                });
+                
+                // Remove flex-related styles from tables
+                clonedTable.querySelectorAll('table').forEach(table => {
+                    const style = table.getAttribute('style') || '';
+                    if (style.includes('flex') || style.includes('gap')) {
+                        const cleanedStyle = style
+                            .replace(/flex:\s*[^;]+;?/gi, '')
+                            .replace(/min-width:\s*[^;]+;?/gi, '')
+                            .replace(/gap:\s*[^;]+;?/gi, '')
+                            .trim();
+                        if (cleanedStyle) {
+                            table.setAttribute('style', cleanedStyle);
+                        } else {
+                            table.removeAttribute('style');
+                        }
+                    }
+                });
+                
+                // Get the inner HTML (the actual section rows)
+                let sectionContent = clonedTable.innerHTML;
+                
+                // Clean up any empty lines
+                sectionContent = sectionContent.replace(/^\s*[\r\n]/gm, '');
+                
+                // Return the clean table rows content
+                return sectionContent.trim();
+            } catch (error) {
+                console.error('Error extracting section content:', error);
+                throw error;
+            }
+        }
+        
+        // Function to copy text to clipboard
+        async function copyToClipboard(text) {
+            try {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } catch (err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    return true;
+                } catch (err) {
+                    document.body.removeChild(textArea);
+                    return false;
+                }
+            }
+        }
+        
+        // Function to show toast notification
+        function showToast(message) {
+            let toast = document.getElementById('copy-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'copy-toast';
+                toast.className = 'copy-toast';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+        
+        // Function to handle copy button click
+        async function handleCopyClick(event) {
+            const button = event.currentTarget;
+            const sectionPath = button.getAttribute('data-section-path');
+            
+            if (!sectionPath) {
+                showToast('Error: Section path not found');
+                return;
+            }
+            
+            // Disable button and show loading state
+            button.disabled = true;
+            button.textContent = 'Copying...';
+            
+            try {
+                // Extract section content
+                const sectionContent = await extractSectionContent(sectionPath);
+                
+                // Copy to clipboard
+                const success = await copyToClipboard(sectionContent);
+                
+                if (success) {
+                    // Show success state
+                    button.classList.add('copied');
+                    button.textContent = 'Copied!';
+                    showToast('Section code copied to clipboard!');
+                    
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        button.classList.remove('copied');
+                        button.textContent = 'Copy Code';
+                        button.disabled = false;
+                    }, 2000);
+                } else {
+                    throw new Error('Failed to copy to clipboard');
+                }
+            } catch (error) {
+                console.error('Error copying section:', error);
+                button.textContent = 'Copy Code';
+                button.disabled = false;
+                showToast('Error copying section. Please try again.');
+            }
+        }
+        
+        // Add event listeners for copy buttons after cards are created
+        function setupCopyButtons() {
+            document.querySelectorAll('.btn-copy').forEach(button => {
+                // Remove existing listeners to avoid duplicates
+                button.replaceWith(button.cloneNode(true));
+            });
+            // Re-attach listeners
+            document.querySelectorAll('.btn-copy').forEach(button => {
+                button.addEventListener('click', handleCopyClick);
+            });
         }
         
         // Render sections on page load
