@@ -6,104 +6,68 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Blog Travel 2 Column</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-            padding: 20px;
-            background: #f5f5f5;
-            font-family: Arial, sans-serif;
+        /* Minimal styles - only for flexbox wrapper which can't be inline */
+        .blog-content-wrapper {
             display: flex;
-            justify-content: center;
+            gap: 20px;
             align-items: flex-start;
-            min-height: 100vh;
         }
-        .email-container {
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .email-container table {
-            max-width: 600px !important;
-            width: 100% !important;
-        }
-        table {
-            width: 100% !important;
-            max-width: 600px !important;
-            border-collapse: collapse;
-        }
-        table[width] {
-            max-width: 600px !important;
-        }
-        img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            border: 0;
-        }
-        a {
-            color: inherit;
-            text-decoration: none;
-        }
-        table[role="presentation"] {
-            border-collapse: collapse;
-            mso-table-lspace: 0pt;
-            mso-table-rspace: 0pt;
-            max-width: 600px !important;
-        }
-        td {
-            padding: 0;
+        @media (max-width: 600px) {
+            .blog-content-wrapper {
+                flex-direction: column;
+            }
+            .blog-content-wrapper table {
+                width: 100% !important;
+            }
         }
     </style>
 </head>
-<body>
-    <div class="email-container">
+<body style="margin: 0; padding: 20px; background: #f5f5f5; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;">
+    <div class="email-container" style="max-width: 600px; width: 100%; margin: 0 auto; background: #ffffff; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; width: 100%; background-color: #ffffff;">
 <tr>
-    <td align="left" style="padding:30px;Margin:0"><!--[if mso]><table dir="ltr" cellpadding="0" cellspacing="0"><tr><td><table dir="rtl" style="width:540px" cellpadding="0" cellspacing="0"><tr><td dir="ltr" style="width:166px" valign="top"><![endif]-->
-        <table cellpadding="0" cellspacing="0" class="cg" align="right" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right">
-            <tbody><tr>
-                <td align="center" class="bu" style="padding:0;Margin:0;width:166px">
-                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                        <tbody><tr>
-                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><a target="_blank" href="#" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:14px"><img src="/assets/CABINET_57bcf646c0f94aed670a35e026f3ef4a376371a1a8e9e35fb3cf40a0daef590a/winterhat.png" alt="Tree" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="50" title="Tree"></a></td>
-                        </tr>
-                        <tr>
-                            <td align="center" class="ck" style="padding:0;Margin:0"><h2 style="Margin:0;line-height:28.8px;mso-line-height-rule:exactly;font-family:Sora, Arial, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333"><strong class="b_title">Travel Blog</strong></h2></td>
-                        </tr>
-                        <tr>
-                            <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><p class="b_description" style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:Sora, Arial, sans-serif;line-height:21px;color:#333333;font-size:14px">Handpicked deals to the most popular hotspots</p></td>
-                        </tr>
-                        <tr>
-                            <td align="center" style="padding:0;Margin:0"><!--[if mso]><a href="#" target="_blank" hidden>
+    <td align="left" style="padding:30px;Margin:0">
+        <div class="blog-content-wrapper">
+            <!--[if mso]><table dir="ltr" cellpadding="0" cellspacing="0"><tr><td><table dir="rtl" style="width:540px" cellpadding="0" cellspacing="0"><tr><td dir="ltr" style="width:166px" valign="top"><![endif]-->
+            <table cellpadding="0" cellspacing="0" class="cg" align="right" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:right;flex:0 0 166px;min-width:166px;">
+                <tbody><tr>
+                    <td align="center" class="bu" style="padding:0;Margin:0;width:166px">
+                        <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                            <tbody><tr>
+                                <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px;font-size:0px"><a target="_blank" href="#" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:14px"><img src="/assets/CABINET_57bcf646c0f94aed670a35e026f3ef4a376371a1a8e9e35fb3cf40a0daef590a/winterhat.png" alt="Tree" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;width:50px" title="Tree"></a></td>
+                            </tr>
+                            <tr>
+                                <td align="center" class="ck" style="padding:0;Margin:0"><h2 style="Margin:0;line-height:28.8px;mso-line-height-rule:exactly;font-family:Sora, Arial, sans-serif;font-size:24px;font-style:normal;font-weight:normal;color:#333333"><strong class="b_title">Travel Blog</strong></h2></td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px"><p class="b_description" style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:Sora, Arial, sans-serif;line-height:21px;color:#333333;font-size:14px">Handpicked deals to the most popular hotspots</p></td>
+                            </tr>
+                            <tr>
+                                <td align="center" style="padding:0;Margin:0"><!--[if mso]><a href="#" target="_blank" hidden>
    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" esdevVmlButton href="#" 
                style="height:41px; v-text-anchor:middle; width:148px" arcsize="0%" stroke="f"  fillcolor="#a1060a">
        <w:anchorlock></w:anchorlock>
        <center style='color:#ffffff; font-family:arial, "helvetica neue", helvetica, sans-serif; font-size:15px; font-weight:400; line-height:15px;  mso-text-raise:1px'>Read More</center>
    </v:roundrect></a>
 <![endif]--><!--[if !mso]><!-- --><span class="msohide ci" style="border-style:solid;border-color:#2CB543;background:#A1060A;border-width:0px;display:inline-block;border-radius:0px;width:auto;mso-hide:all"><a href="#" class="ch" target="_blank" style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;display:inline-block;background:#A1060A;border-radius:0px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:21.6px;width:auto;text-align:center;padding:10px 20px 10px 20px;mso-padding-alt:0;mso-border-alt:10px solid #A1060A">Read More</a></span><!--<![endif]--></td>
-                        </tr>
-                    </tbody></table></td>
-            </tr>
-        </tbody></table><!--[if mso]></td><td dir="ltr" style="width:20px"></td><td dir="ltr" style="width:354px" valign="top"><![endif]-->
-        <table cellpadding="0" cellspacing="0" class="cf" align="left" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left">
-            <tbody><tr>
-                <td align="left" style="padding:0;Margin:0;width:354px">
-                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
-                        <tbody><tr>
-                            <td align="center" style="padding:0;Margin:0;font-size:0px"><a target="_blank" href="#" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:14px"><img class="adapt-img b_image" src="/assets/CABINET_57bcf646c0f94aed670a35e026f3ef4a376371a1a8e9e35fb3cf40a0daef590a/lowanglecoupleclinkingglasses.jpg" alt="Christmas" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="354" title="Christmas"></a></td>
-                        </tr>
-                    </tbody></table></td>
-            </tr>
-        </tbody></table><!--[if mso]></td></tr></table></td></tr></table><![endif]--></td>
+                            </tr>
+                        </tbody></table></td>
+                </tr>
+            </tbody></table><!--[if mso]></td><td dir="ltr" style="width:20px"></td><td dir="ltr" style="width:354px" valign="top"><![endif]-->
+            <table cellpadding="0" cellspacing="0" class="cf" align="left" role="none" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px;float:left;flex:1;min-width:0;">
+                <tbody><tr>
+                    <td align="left" style="padding:0;Margin:0;width:354px">
+                        <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
+                            <tbody><tr>
+                                <td align="center" style="padding:0;Margin:0;font-size:0px"><a target="_blank" href="#" style="-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;text-decoration:underline;color:#333333;font-size:14px"><img class="adapt-img b_image" src="/assets/CABINET_57bcf646c0f94aed670a35e026f3ef4a376371a1a8e9e35fb3cf40a0daef590a/lowanglecoupleclinkingglasses.jpg" alt="Christmas" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic;width:100%;max-width:354px" title="Christmas"></a></td>
+                            </tr>
+                        </tbody></table></td>
+                </tr>
+            </tbody></table><!--[if mso]></td></tr></table></td></tr></table><![endif]-->
+        </div>
+    </td>
 </tr>
         </table>
     </div>
 </body>
 </html>
-
