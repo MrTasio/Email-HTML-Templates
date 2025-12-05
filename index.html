@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Email Templates Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #262038 100%);
+            color: #ffffff;
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        h1 {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #00BCD4 0%, #00ACC1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            color: #b0b0b0;
+            font-weight: 300;
+        }
+        
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .template-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 188, 212, 0.2);
+            border-color: rgba(0, 188, 212, 0.5);
+        }
+        
+        .template-preview {
+            width: 100%;
+            height: 300px;
+            background: #ffffff;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .template-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(0.5);
+            transform-origin: top left;
+            width: 200%;
+            height: 200%;
+        }
+        
+        .template-info {
+            padding: 25px;
+        }
+        
+        .template-title {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+        
+        .template-description {
+            font-size: 14px;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .template-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-tag {
+            background: rgba(0, 188, 212, 0.2);
+            color: #00BCD4;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .template-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        
+        .btn-primary {
+            background: #00BCD4;
+            color: #ffffff;
+        }
+        
+        .btn-primary:hover {
+            background: #00ACC1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 188, 212, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 188, 212, 0.15);
+            border-color: rgba(0, 188, 212, 0.5);
+            color: #00BCD4;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(0, 188, 212, 0.3);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-family: 'Poppins', Arial, sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: #00BCD4;
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #b0b0b0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+        
+        .preview-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            color: #666;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .preview-placeholder::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(0, 188, 212, 0.1) 50%, transparent 70%);
+            background-size: 200% 200%;
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+            
+            .templates-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Email Templates Collection</h1>
+            <p class="subtitle">Professional email templates</p>
+        </header>
+        
+        <div class="templates-grid">
+            <!-- Newsletter 1 -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-placeholder">
+                        <div style="text-align: center; z-index: 1; position: relative;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">📧</div>
+                            <div style="font-weight: 600;">Newsletter 1</div>
+                            <div style="font-size: 12px; margin-top: 5px; color: #999;">AVORA Fall Sale</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3 class="template-title">AVORA Fall Sale</h3>
+                    <p class="template-description">
+                        Fashion-focused email template featuring fall sale promotion with hero section, product grid, and modern design elements.
+                    </p>
+                    <div class="template-meta">
+                        <span class="meta-tag">Fashion</span>
+                        <span class="meta-tag">Sale</span>
+                    </div>
+                    <div class="template-actions">
+                        <a href="newsletter-1.html" class="btn btn-primary" target="_blank">View Template</a>
+                        <a href="newsletter-1-brevo-ready.html" class="btn btn-secondary" target="_blank">Brevo Ready</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Newsletter 2 -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-placeholder">
+                        <div style="text-align: center; z-index: 1; position: relative;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🏠</div>
+                            <div style="font-weight: 600;">Newsletter 2</div>
+                            <div style="font-size: 12px; margin-top: 5px; color: #999;">Interior Design</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3 class="template-title">Interior Design</h3>
+                    <p class="template-description">
+                        Elegant interior design newsletter with product showcases, testimonials, blog section, and sophisticated color scheme.
+                    </p>
+                    <div class="template-meta">
+                        <span class="meta-tag">Interior</span>
+                        <span class="meta-tag">Design</span>
+                    </div>
+                    <div class="template-actions">
+                        <a href="newsletter-2.html" class="btn btn-primary" target="_blank">View Template</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Newsletter 3 -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-placeholder">
+                        <div style="text-align: center; z-index: 1; position: relative;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">🛋️</div>
+                            <div style="font-weight: 600;">Newsletter 3</div>
+                            <div style="font-size: 12px; margin-top: 5px; color: #999;">Modern Furniture</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3 class="template-title">Modern Furniture & Design</h3>
+                    <p class="template-description">
+                        Modern furniture store template with card-based product layouts, gradient hero section, and contemporary design aesthetic.
+                    </p>
+                    <div class="template-meta">
+                        <span class="meta-tag">Furniture</span>
+                        <span class="meta-tag">Modern</span>
+                    </div>
+                    <div class="template-actions">
+                        <a href="newsletter-3.html" class="btn btn-primary" target="_blank">View Template</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Newsletter 4 -->
+            <div class="template-card">
+                <div class="template-preview">
+                    <div class="preview-placeholder">
+                        <div style="text-align: center; z-index: 1; position: relative;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">👗</div>
+                            <div style="font-weight: 600;">Newsletter 4</div>
+                            <div style="font-size: 12px; margin-top: 5px; color: #999;">AVORA Fashion</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="template-info">
+                    <h3 class="template-title">AVORA Fashion</h3>
+                    <p class="template-description">
+                        Fashion retail email template with pattern backgrounds, product showcases, and elegant typography for AVORA brand.
+                    </p>
+                    <div class="template-meta">
+                        <span class="meta-tag">Fashion</span>
+                        <span class="meta-tag">AVORA</span>
+                    </div>
+                    <div class="template-actions">
+                        <a href="newsletter-4.html" class="btn btn-primary" target="_blank">View Template</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Templates</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">100%</span>
+                <span class="stat-label">Responsive</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">5+</span>
+                <span class="stat-label">Email Clients</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
