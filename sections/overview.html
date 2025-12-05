@@ -887,6 +887,39 @@
             max-width: 600px !important;
             width: 100% !important;
         }
+        /* Flexbox wrapper styles for sections */
+        .promo-content-wrapper,
+        .product-showcase-wrapper,
+        .blog-content-wrapper,
+        .footer-contact-wrapper,
+        .footer-unsubscribe-wrapper {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .footer-unsubscribe-wrapper {
+            align-items: center;
+            justify-content: space-between;
+        }
+        @media (max-width: 600px) {
+            .promo-content-wrapper,
+            .product-showcase-wrapper,
+            .blog-content-wrapper,
+            .footer-contact-wrapper,
+            .footer-unsubscribe-wrapper {
+                flex-direction: column;
+            }
+            .footer-unsubscribe-wrapper {
+                align-items: flex-start;
+            }
+            .promo-content-wrapper table,
+            .product-showcase-wrapper table,
+            .blog-content-wrapper table,
+            .footer-contact-wrapper table,
+            .footer-unsubscribe-wrapper table {
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body>
