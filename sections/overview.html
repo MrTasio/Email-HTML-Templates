@@ -385,7 +385,7 @@
         async function loadSectionContent(path) {
             try {
                 // Try to fetch the section content
-                const response = await fetch(`sections/${path}`);
+                const response = await fetch(`${path}`);
                 if (!response.ok) throw new Error('Fetch failed');
                 return await response.text();
             } catch (error) {
