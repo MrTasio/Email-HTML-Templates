@@ -52,8 +52,51 @@
             font-weight: 300;
         }
         
+        .filter-container {
+            margin-bottom: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-btn {
+            padding: 10px 24px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-transform: capitalize;
+            font-family: 'Poppins', Arial, sans-serif;
+        }
+        
+        .filter-btn:hover {
+            background: rgba(0, 188, 212, 0.2);
+            border-color: rgba(0, 188, 212, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00BCD4 0%, #00ACC1 100%);
+            border-color: #00BCD4;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 188, 212, 0.3);
+        }
+        
         .category-section {
             margin-bottom: 60px;
+        }
+        
+        .category-section.hidden {
+            display: none;
         }
         
         .category-title {
@@ -67,10 +110,42 @@
             border-bottom: 2px solid rgba(0, 188, 212, 0.3);
         }
         
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #b0b0b0;
+            font-size: 18px;
+            display: none;
+        }
+        
+        .no-results.show {
+            display: block;
+        }
+        
         .sections-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 30px;
+            align-items: start;
+        }
+        
+        /* Masonry effect - cards align to top */
+        .section-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+        
+        /* Better spacing for masonry */
+        @media (min-width: 768px) {
+            .sections-grid {
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .sections-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
         }
         
         .section-card {
@@ -82,12 +157,17 @@
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
+            opacity: 1;
         }
         
         .section-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 40px rgba(0, 188, 212, 0.2);
             border-color: rgba(0, 188, 212, 0.5);
+        }
+        
+        .section-card[style*="display: none"] {
+            display: none !important;
         }
         
         .section-preview {
@@ -168,6 +248,19 @@
             font-weight: 600;
             margin-bottom: 10px;
             color: #ffffff;
+            line-height: 1.3;
+        }
+        
+        .category-badge {
+            background: rgba(0, 188, 212, 0.2);
+            color: #00BCD4;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
         }
         
         .section-path {
@@ -303,8 +396,14 @@
                 font-size: 36px;
             }
             
-            .category-title {
-                font-size: 24px;
+            .filter-container {
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .filter-btn {
+                padding: 8px 16px;
+                font-size: 12px;
             }
             
             .stats {
@@ -323,8 +422,17 @@
             <p class="subtitle">Modular, reusable sections for email templates</p>
         </header>
         
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">All Sections</button>
+            <!-- Filter buttons will be dynamically added here -->
+        </div>
+        
         <div id="sections-container">
             <!-- Sections will be dynamically loaded here -->
+        </div>
+        
+        <div class="no-results" id="no-results">
+            <p>No sections found matching your filter.</p>
         </div>
         
         <div class="stats">
@@ -534,7 +642,10 @@
                     </div>
                 </div>
                 <div class="section-info">
-                    <h3 class="section-name">${section.name}</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                        <h3 class="section-name" style="flex: 1; margin: 0;">${section.name}</h3>
+                        <span class="category-badge" style="background: rgba(0, 188, 212, 0.2); color: #00BCD4; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-left: 10px; white-space: nowrap;">${category}</span>
+                    </div>
                     <div class="section-path">${section.path}</div>
                     <p style="color: #b0b0b0; font-size: 14px; margin-bottom: 15px;">${section.description}</p>
                     <div class="section-actions">
@@ -552,37 +663,80 @@
             return card;
         }
         
+        function setupFilters() {
+            const filterContainer = document.querySelector('.filter-container');
+            
+            // Create filter buttons for each category
+            Object.keys(sectionsData).forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                btn.textContent = category;
+                btn.setAttribute('data-filter', category);
+                btn.addEventListener('click', () => filterSections(category));
+                filterContainer.appendChild(btn);
+            });
+        }
+        
+        function filterSections(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-filter') === category || 
+                    (category === 'all' && btn.getAttribute('data-filter') === 'all')) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Show/hide sections based on filter
+            const cards = document.querySelectorAll('.section-card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            const noResults = document.getElementById('no-results');
+            if (visibleCount === 0) {
+                noResults.classList.add('show');
+            } else {
+                noResults.classList.remove('show');
+            }
+        }
+        
         async function renderSections() {
             const container = document.getElementById('sections-container');
             let totalSections = 0;
             
-            // Render each category
+            // Create a single masonry grid for all sections
+            const grid = document.createElement('div');
+            grid.className = 'sections-grid';
+            grid.id = 'sections-grid';
+            
+            // Render all sections in one grid
             for (const category of Object.keys(sectionsData)) {
-                const categorySection = document.createElement('div');
-                categorySection.className = 'category-section';
-                
-                const categoryTitle = document.createElement('h2');
-                categoryTitle.className = 'category-title';
-                categoryTitle.textContent = category;
-                categorySection.appendChild(categoryTitle);
-                
-                const grid = document.createElement('div');
-                grid.className = 'sections-grid';
-                
-                // Create cards for each section in this category
                 for (const section of sectionsData[category]) {
                     const card = await createSectionCard(section, category);
+                    card.setAttribute('data-category', category);
                     grid.appendChild(card);
                     totalSections++;
                 }
-                
-                categorySection.appendChild(grid);
-                container.appendChild(categorySection);
             }
+            
+            container.appendChild(grid);
             
             // Update stats
             document.getElementById('total-sections').textContent = totalSections;
             document.getElementById('total-categories').textContent = Object.keys(sectionsData).length;
+            
+            // Setup filters after rendering
+            setupFilters();
         }
         
         // Render sections on page load
